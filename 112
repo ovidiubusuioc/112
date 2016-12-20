@@ -1,0 +1,91 @@
+Schimbari:
+1.ClientPeer
+    private final JTextArea DisplayArea; // pe asta o pui sus unde sunt celelalte cu private blabla
+   
+   public void setUsername(String newUserName) { //pe astea 2 le pui la sfarsit
+        mSender = newUserName;
+    } 
+   
+   public void setOutputPane(JTextArea textArea) {
+        DisplayArea = textArea;
+    }
+
+
+
+2.GUICLIENT    // click dreapta pe numele proiectului --> new class ->> la nume ii bagi seriaf.poo.client.gui.GuiClient --> next
+
+package seriaf.poo.client.gui;
+
+import java.awt.FlowLayout;
+import java.io.IOException;
+import java.net.Socket;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import seriaf.poo.client.ClientPeer;
+
+public class GuiClient extends JFrame {
+
+    private final ClientPeer clientPeer;
+    private final Socket socket;
+    private JLabel mSenderNameLabel;
+    private JTextField mSenderTextField;
+    private JButton mChangeSenderButton;
+    private JTextArea mMessageDisplayTextArea;
+    private JTextField mMessageTextField;
+    private JButton mSendMessageButton;
+    private JScrollPane mMessageAreaScrollPane;
+    private JPanel p1;
+    private JPanel p2;
+    private JPanel p3;
+
+    public GuiClient(Socket socket, String sender) throws IOException {
+        initComponents();
+        _socket = socket;
+        clientPeer = new ClientPeer(sender, _socket);
+    }
+
+    public static void main(String[] args) {
+        try {
+            GuiClient gui_client = new GuiClient(_socket, sender);
+            gui_client.display();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void display() throws IOException {
+        clientPeer.start();
+        pack();
+        setResizable(false);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    private void initComponents() {
+        
+        p1 = new JPanel(new FlowLayout());
+        p2 = new JPanel(new FlowLayout());
+        p3 = new JPanel(new FlowLayout());
+        mSenderNameLabel = new JLabel("Name:");
+        mSenderTextField = new JTextField("NewUser", 25);
+        mChangeSenderButton = new JButton("Change Name");
+        mMessageDisplayTextArea = new JTextArea();
+        mMessageDisplayTextArea.setEditable(false); // makes it read only
+        mMessageAreaScrollPane = new JScrollPane(mMessageDisplayTextArea);
+        mMessageTextField = new JTextField(40);
+        mSendMessageButton = new JButton("Send");
+        
+        p1.add(mSenderNameLabel);
+        p1.add(mSenderTextField);
+        p1.add(mChangeSenderButton);
+        p2.add(mMessageAreaScrollPane);
+        p3.add(mMessageTextField);
+        p3.add(mSendMessageButton);    
+        
+    }
+}
